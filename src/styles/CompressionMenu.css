@@ -1,22 +1,25 @@
-.container {
+.compression-menu {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 20px;
+    padding: 10px;
 }
 
 .select-menu {
     margin: 20px 0;
     font-size: 18px;
     font-weight: bold;
+    padding: 10px;
 }
 
 .select-menu select {
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 10px;
+    border: 1px solid #edebeb;
     background-color: #f9f9f9;
     cursor: pointer;
+    
 }
 
 .select-menu select:focus {

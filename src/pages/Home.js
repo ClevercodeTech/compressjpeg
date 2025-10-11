@@ -5,7 +5,7 @@ import ProgressBar from '../components/ProgressBar';
 import DownloadButton from '../components/DownloadButton';
 import { compressJPEG } from '../utils/jpegCompressor';
 import '../styles/Home.css';
-
+import compressIcon from '../asset/compress-icon.png';
 const Home = () => {
     const [progress, setProgress] = useState(0);
     const [compressedFile, setCompressedFile] = useState(null);
@@ -44,14 +44,17 @@ const Home = () => {
             }
         };
         compressOnOptionChange();
-      
     }, [compressionOption]);
 
     return (
         <div className="home-container">
-            <h1>JPEG Compressor</h1>
+            <div className="privacy-banner">
+                <div className="privacy-title">Private and Secure</div>
+                <div className="privacy-subtext"> Processed without leaving your browser</div>
+            </div>
+            <img src={compressIcon} alt="Logo" className="logo" />
             <p className="subtitle">
-                Compress JPEG or convert PNG to JPEG. Drag & drop your image below.
+                Compress JPEG or convert PNG to JPEG.
             </p>
             <CompressionMenu onSelect={setCompressionOption} />
             <DragDropArea onDrop={handleFileDrop} accept="image/jpeg,image/png" previewUrl={previewUrl} />
