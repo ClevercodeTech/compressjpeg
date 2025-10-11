@@ -25,7 +25,7 @@ function isSupportedImage(file) {
 }
 
 const Home = () => {
-    const [progress, setProgress] = useState(0);
+    const [progress, setProgress] = useState(null);
     const [compressedFile, setCompressedFile] = useState(null);
     const [compressionOption, setCompressionOption] = useState('medium');
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -191,7 +191,7 @@ const Home = () => {
                     Paste URL
                 </button>
             </div>
-            <ProgressBar progress={progress} />
+            <ProgressBar progress={progress} hasFile={!!selectedFile} />
             {compressedFile && (
                 <DownloadButton
                     file={compressedFile}

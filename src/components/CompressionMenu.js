@@ -12,7 +12,7 @@ function CompressionMenu({ onSelect }) {
 
     return (
         <div className="compression-menu">
-            <label htmlFor="compression-options">Select Compression Size:</label>
+            <label htmlFor="compression-options">Size: </label>
             <select
                 id="compression-options"
                 value={selectedOption}
