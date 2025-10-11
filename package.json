@@ -4,14 +4,13 @@
   "description": "A React application for compressing JPEG files with a drag-and-drop interface.",
   "main": "index.js",
   "homepage": "https://clevercodetech.github.io/compressjpeg/",
-
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-     "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build"
   },
   "keywords": [
     "jpeg",
@@ -22,6 +21,7 @@
   "author": "ClevercodeTech",
   "license": "MIT",
   "dependencies": {
+    "heic2any": "^0.0.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^14.3.8",
