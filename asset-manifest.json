@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/compressjpeg/static/css/main.c1b141cc.css",
+    "main.js": "/compressjpeg/static/js/main.999de947.js",
+    "index.html": "/compressjpeg/index.html",
+    "main.c1b141cc.css.map": "/compressjpeg/static/css/main.c1b141cc.css.map",
+    "main.999de947.js.map": "/compressjpeg/static/js/main.999de947.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c1b141cc.css",
+    "static/js/main.999de947.js"
+  ]
+}
