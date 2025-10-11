@@ -146,13 +146,13 @@ const Home = () => {
     return (
         <div className="home-container">
             <div className="privacy-banner">
-                <div className="privacy-title">It's private</div>
-                <div className="privacy-subtext">Runs locally</div>
+                <div className="privacy-title">Private and Secure</div>
+                <div className="privacy-subtext">Runs locally on your browser</div>
             </div>
             <img src={compressIcon} alt="Logo" className="logo" />
-            <h1>JPEG Compressor</h1>
+    
             <p className="subtitle">
-                Compress JPEG, PNG, WebP, HEIC or convert them to JPEG. Drag & drop your image below or paste an image URL.
+                Compress JPEG, PNG, WebP, HEIC or convert them to JPEG. 
             </p>
             <CompressionMenu onSelect={setCompressionOption} />
             <DragDropArea

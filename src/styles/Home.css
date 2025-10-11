@@ -81,7 +81,7 @@ h2 {
 
 .home-container {
     max-width: 500px;
-    margin: 40px auto;
+    margin: 30px auto;
     padding: 32px 24px;
     background: #fff;
     border-radius: 16px;
@@ -118,12 +118,13 @@ h2 {
 .subtitle {
     color: #666;
     margin-bottom: 24px;
-    font-size: 1em;
+    font-size: .8em;
 }
 
 .logo{
-    width: 280px;
-    margin-bottom: 20px;
+    width: 240px;
+    margin-bottom: 10px;
     border-radius:10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
