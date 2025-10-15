@@ -4,6 +4,8 @@ import DragDropArea from '../components/DragDropArea';
 import { compressJPEG } from '../utils/jpegCompressor';
 import '../styles/Home.css';
 import compressIcon from '../asset/compress-icon.png';
+import DonateButton from '../components/buymeCoffee.js';
+import FeedbackWidget from '../components/feedback.js';
 
 // Helper to check supported image types
 function isSupportedImage(file) {
@@ -254,6 +256,9 @@ const Home = () => {
                     Download All Compressed Images ({files.length})
                 </button>
             )}
+
+            <DonateButton />
+            <FeedbackWidget />
         </div>
     );
 };

@@ -1,0 +1,129 @@
+.feedback-widget {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  font-family: sans-serif;
+
+}
+
+.feedback-button {
+  background: #2563eb;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+
+.feedback-button:hover {
+  background: #1e40af;
+}
+
+.feedback-form-container {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  width: 20rem;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  right: 0.8rem;
+  top: 0.5rem;
+  border: none;
+  background: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #999;
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+}
+
+.feedback-form h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  font-size: 0.9rem;
+  resize: none;
+}
+
+.feedback-form button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.feedback-form button:hover {
+  background: #1e40af;
+}
+
+.feedback-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Rocket animation */
+.thankyou-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.rocket {
+  font-size: 3rem;
+  animation: flyAway 1.8s ease-in-out forwards;
+}
+
+@keyframes flyAway {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-150px) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-180px) rotate(60deg);
+    opacity: 0;
+  }
+}
+
+.thankyou-text {
+  margin-top: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  animation: fadeIn 1s ease-in forwards 1.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
