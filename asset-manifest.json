@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/compressjpeg/static/css/main.2f97db1a.css",
-    "main.js": "/compressjpeg/static/js/main.eed466c5.js",
+    "main.js": "/compressjpeg/static/js/main.0734accf.js",
     "static/media/compress-icon.png": "/compressjpeg/static/media/compress-icon.4791c1a932030aef2504.png",
     "index.html": "/compressjpeg/index.html",
     "main.2f97db1a.css.map": "/compressjpeg/static/css/main.2f97db1a.css.map",
-    "main.eed466c5.js.map": "/compressjpeg/static/js/main.eed466c5.js.map"
+    "main.0734accf.js.map": "/compressjpeg/static/js/main.0734accf.js.map"
   },
   "entrypoints": [
     "static/css/main.2f97db1a.css",
-    "static/js/main.eed466c5.js"
+    "static/js/main.0734accf.js"
   ]
 }
