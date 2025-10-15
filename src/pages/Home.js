@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CompressionMenu from '../components/CompressionMenu.js';
 import DragDropArea from '../components/DragDropArea';
-import ProgressBar from '../components/ProgressBar';
-import DownloadButton from '../components/DownloadButton';
 import { compressJPEG } from '../utils/jpegCompressor';
 import '../styles/Home.css';
 import compressIcon from '../asset/compress-icon.png';
@@ -25,73 +23,114 @@ function isSupportedImage(file) {
 }
 
 const Home = () => {
-    const [progress, setProgress] = useState(null);
-    const [compressedFile, setCompressedFile] = useState(null);
+    const [files, setFiles] = useState([]);
     const [compressionOption, setCompressionOption] = useState('medium');
-    const [previewUrl, setPreviewUrl] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
-    const [isHeic, setIsHeic] = useState(false);
+    const [nextId, setNextId] = useState(0);
+    const [autoDownload, setAutoDownload] = useState(true);
+    const downloadedFilesRef = useRef(new Set());
 
     // Accept JPEG, PNG, WebP, HEIC, compress to JPEG
-    const handleFileDrop = async (file) => {
-        setProgress(0);
-        setCompressedFile(null);
-        setSelectedFile(file);
-        setIsHeic(false);
-
-        if (isSupportedImage(file)) {
-            const isHeicFile =
-                file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic');
-            setIsHeic(isHeicFile);
-
-            if (!isHeicFile) {
-                setPreviewUrl(URL.createObjectURL(file));
-            } else {
-                setPreviewUrl(null); // Can't preview HEIC
-            }
-
-            const compressed = await compressJPEG(file, compressionOption, setProgress);
-
-            // For HEIC, show preview after conversion and compression
-            if (isHeicFile && compressed) {
-                setPreviewUrl(URL.createObjectURL(compressed));
-            }
-
-            setCompressedFile(compressed);
-        } else {
+    const handleFileDrop = async (droppedFiles) => {
+        const supportedFiles = droppedFiles.filter(file => isSupportedImage(file));
+        
+        if (supportedFiles.length === 0) {
             alert('Only JPEG, PNG, WebP, and HEIC files are accepted.');
+            return;
+        }
+
+        const newFiles = supportedFiles.map((file, index) => {
+            const id = nextId + index;
+            const isHeicFile = file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic');
+            
+            return {
+                id,
+                file,
+                progress: 0,
+                compressedFile: null,
+                previewUrl: isHeicFile ? null : URL.createObjectURL(file),
+                isHeic: isHeicFile,
+            };
+        });
+
+        setNextId(nextId + supportedFiles.length);
+        setFiles(prevFiles => [...prevFiles, ...newFiles]);
+
+        // Process each file
+        newFiles.forEach((fileItem) => {
+            compressFileItem(fileItem.id, fileItem.file, fileItem.isHeic);
+        });
+    };
+
+    const compressFileItem = async (id, file, isHeicFile) => {
+        const setProgressForFile = (progress) => {
+            setFiles(prevFiles => 
+                prevFiles.map(f => 
+                    f.id === id ? { ...f, progress } : f
+                )
+            );
+        };
+
+        const compressed = await compressJPEG(file, compressionOption, setProgressForFile);
+
+        if (compressed) {
+            setFiles(prevFiles => 
+                prevFiles.map(f => {
+                    if (f.id === id) {
+                        return {
+                            ...f,
+                            compressedFile: compressed,
+                            previewUrl: isHeicFile ? URL.createObjectURL(compressed) : f.previewUrl,
+                        };
+                    }
+                    return f;
+                })
+            );
+            
+            // Auto-download if enabled
+            if (autoDownload && !downloadedFilesRef.current.has(id)) {
+                downloadedFilesRef.current.add(id);
+                setTimeout(() => {
+                    downloadFile(compressed, file.name);
+                }, 100);
+            }
         }
     };
 
-    // Re-compress if compression option changes and a file is selected
+    const downloadFile = (compressedFile, originalName) => {
+        const baseName = originalName.replace(/\.[^/.]+$/, '');
+        const optionLabel = compressionOption.replace(/\s+/g, '').toLowerCase();
+        const fileName = `${baseName}_${optionLabel}.jpg`;
+        const url = URL.createObjectURL(compressedFile);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // Re-compress if compression option changes
     useEffect(() => {
-        const compressOnOptionChange = async () => {
-            if (selectedFile) {
-                setProgress(0);
-                setCompressedFile(null);
-                const isHeicFile =
-                    selectedFile.type === 'image/heic' ||
-                    selectedFile.name.toLowerCase().endsWith('.heic');
-                setIsHeic(isHeicFile);
+        if (files.length > 0) {
+            // Clear downloaded files tracker
+            downloadedFilesRef.current.clear();
+            
+            // Reset progress and compressed files for all
+            setFiles(prevFiles => 
+                prevFiles.map(f => ({
+                    ...f,
+                    progress: 0,
+                    compressedFile: null,
+                }))
+            );
 
-                if (!isHeicFile) {
-                    setPreviewUrl(URL.createObjectURL(selectedFile));
-                } else {
-                    setPreviewUrl(null);
-                }
-
-                const compressed = await compressJPEG(selectedFile, compressionOption, setProgress);
-
-                if (isHeicFile && compressed) {
-                    setPreviewUrl(URL.createObjectURL(compressed));
-                }
-
-                setCompressedFile(compressed);
-            }
-        };
-        compressOnOptionChange();
- 
+            // Re-compress all files
+            files.forEach((fileItem) => {
+                compressFileItem(fileItem.id, fileItem.file, fileItem.isHeic);
+            });
+        }
     }, [compressionOption]);
 
     // Handle URL paste and fetch
@@ -101,7 +140,6 @@ const Home = () => {
             // Simple URL validation
             if (/^https?:\/\/.+\.(jpg|jpeg|png|webp|heic)$/i.test(text)) {
                 setImageUrl(text);
-                setProgress(10);
                 // Fetch image as blob
                 const response = await fetch(text);
                 const blob = await response.blob();
@@ -117,24 +155,10 @@ const Home = () => {
                     ? 'image/heic'
                     : '';
                 const file = new File([blob], `image.${ext}`, { type: mimeType });
-                setSelectedFile(file);
-
-                const isHeicFile = mimeType === 'image/heic' || ext === 'heic';
-                setIsHeic(isHeicFile);
-
-                if (!isHeicFile) {
-                    setPreviewUrl(URL.createObjectURL(file));
-                } else {
-                    setPreviewUrl(null);
-                }
-
-                const compressed = await compressJPEG(file, compressionOption, setProgress);
-
-                if (isHeicFile && compressed) {
-                    setPreviewUrl(URL.createObjectURL(compressed));
-                }
-
-                setCompressedFile(compressed);
+                
+                // Add as a new file to process
+                handleFileDrop([file]);
+                setImageUrl(''); // Clear input after adding
             } else {
                 alert('Clipboard does not contain a valid image URL (jpg, jpeg, png, webp, heic).');
             }
@@ -142,6 +166,23 @@ const Home = () => {
             alert('Could not read clipboard or fetch image.');
         }
     };
+
+    const handleRemoveFile = (id) => {
+        downloadedFilesRef.current.delete(id);
+        setFiles(prevFiles => prevFiles.filter(f => f.id !== id));
+    };
+
+    const handleDownloadAll = () => {
+        files.forEach((fileItem, index) => {
+            if (fileItem.compressedFile) {
+                setTimeout(() => {
+                    downloadFile(fileItem.compressedFile, fileItem.file.name);
+                }, index * 100);
+            }
+        });
+    };
+
+    const allFilesCompressed = files.length > 0 && files.every(f => f.compressedFile);
 
     return (
         <div className="home-container">
@@ -155,10 +196,24 @@ const Home = () => {
                 Compress JPEG, PNG, WebP, HEIC or convert them to JPEG. 
             </p>
             <CompressionMenu onSelect={setCompressionOption} />
+            
+            <div className="auto-download-container">
+                <label className="auto-download-label">
+                    <input
+                        type="checkbox"
+                        checked={autoDownload}
+                        onChange={(e) => setAutoDownload(e.target.checked)}
+                        className="auto-download-checkbox"
+                    />
+                    <span>Auto-download compressed images</span>
+                </label>
+            </div>
+            
             <DragDropArea
                 onDrop={handleFileDrop}
                 accept="image/jpeg,image/png,image/webp,image/heic"
-                previewUrl={previewUrl}
+                files={files}
+                onRemove={handleRemoveFile}
             />
             <div style={{ margin: '18px 0' }}>
                 <input
@@ -191,13 +246,13 @@ const Home = () => {
                     Paste URL
                 </button>
             </div>
-            <ProgressBar progress={progress} hasFile={!!selectedFile} />
-            {compressedFile && (
-                <DownloadButton
-                    file={compressedFile}
-                    originalName={selectedFile ? selectedFile.name : ''}
-                    compressionOption={compressionOption}
-                />
+            {!autoDownload && allFilesCompressed && (
+                <button
+                    onClick={handleDownloadAll}
+                    className="download-all-button"
+                >
+                    Download All Compressed Images ({files.length})
+                </button>
             )}
         </div>
     );

@@ -128,3 +128,64 @@ h2 {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.files-list {
+    margin-top: 24px;
+    text-align: left;
+}
+
+.download-all-button {
+    width: 100%;
+    padding: 14px 24px;
+    background: linear-gradient(90deg, #2196f3 0%, #1976d2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.download-all-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.download-all-button:active {
+    transform: translateY(0);
+}
+
+.auto-download-container {
+    margin: 16px 0;
+    text-align: left;
+}
+
+.auto-download-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.auto-download-label:hover {
+    color: #1fa463;
+}
+
+.auto-download-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #1fa463;
+}
+
+.auto-download-label span {
+    line-height: 1;
+}
+
