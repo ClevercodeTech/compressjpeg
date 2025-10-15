@@ -1,4 +1,3 @@
-const fetch = require("node-fetch"); // if needed in Node 18+
 
 exports.handler = async function(event, context) {
   // Handle CORS preflight
